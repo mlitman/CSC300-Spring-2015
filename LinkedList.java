@@ -4,10 +4,26 @@ public class LinkedList
 	private Node head;
 	private int count;
 	
+	//upgrade our LinkedList to such that there is a pointer called tail
+	//that points to the end of the list, and each node, knows about the 
+	//previousNode.  So you need to update all the add methods, all the
+	//remove methods, and finally re-write displayInReverse to take advantage
+	//of our new double-linked list.
+	//GitHub: https://github.com/mlitman/CSC300-Spring-2015
+	
 	public LinkedList()
 	{
 		this.head = null;
 		this.count = 0;
+	}
+	
+	public void displayInReverse()
+	{
+		for(int i = this.count-1; i >= 0; i--)
+		{
+			System.out.print(this.get(i) + "->");
+		}
+		System.out.println(" null");
 	}
 	
 	public int get(int index)
@@ -119,6 +135,43 @@ public class LinkedList
 		this.count++;
 	}
 	
+	public int removeAtIndex(int index) throws Exception
+	{
+		if(head == null)
+		{
+			throw new Exception("Can Not Remove At Index: Empty List");
+		}
+		else if(index < 0 || index > this.count-1)
+		{
+			throw new Exception("Can Not Remove At Index: Index Out of Bounds : " + index);
+		}
+		else
+		{
+			//so we have something to remove
+			if(index == 0)
+			{
+				return this.removeFront();
+			}
+			else if(index == this.count-1)
+			{
+				return this.removeEnd();
+			}
+			else
+			{
+				Node currNode = head;
+				for(int i = 1; i < index; i++)
+				{
+					currNode = currNode.getNextNode();
+				}
+				int payloadToReturn = currNode.getNextNode().getPayload();
+				Node temp = currNode.getNextNode().getNextNode();
+				currNode.getNextNode().setNextNode(null);
+				currNode.setNextNode(temp);
+				return payloadToReturn;
+			}
+		}
+	}
+	
 	public int removeEnd() throws Exception
 	{
 		if(head == null)
@@ -131,7 +184,15 @@ public class LinkedList
 		}
 		else
 		{
-			//finish this
+			Node currNode = head;
+			for(int i = 1; i < this.count-1; i++)
+			{
+				currNode = currNode.getNextNode();
+			}
+			int payloadToReturn = currNode.getNextNode().getPayload();
+			currNode.setNextNode(null);
+			this.count--;
+			return payloadToReturn;
 		}
 	}
 	public int removeFront() throws Exception

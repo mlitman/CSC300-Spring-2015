@@ -118,4 +118,32 @@ public class LinkedList
 		}
 		this.count++;
 	}
+	
+	public int removeEnd() throws Exception
+	{
+		if(head == null)
+		{
+			throw new Exception("Can Not Remove End: Empty List");
+		}
+		else if(this.count == 1)
+		{
+			return this.removeFront();
+		}
+		else
+		{
+			//finish this
+		}
+	}
+	public int removeFront() throws Exception
+	{
+		if(head == null)
+		{
+			throw new Exception("Can Not Remove Front: Empty List");
+		}
+		Node currNode = head;
+		head = head.getNextNode();
+		currNode.setNextNode(null);
+		this.count--;
+		return currNode.getPayload();
+	}
 }

@@ -21,7 +21,7 @@ public class Node
 	}
 
 	public int getPayload() {
-		return payload;
+		return this.payload;
 	}
 	
 	

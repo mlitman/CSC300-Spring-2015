@@ -1,7 +1,7 @@
 
 public class Node 
 {
-	private Node nextNode;
+	private Node nextNode
 	private int payload;
 	
 	public Node(int payload)

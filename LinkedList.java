@@ -2,6 +2,7 @@
 public class LinkedList 
 {
 	private Node head;
+	private Node tail;
 	private int count;
 	
 	//upgrade our LinkedList to such that there is a pointer called tail

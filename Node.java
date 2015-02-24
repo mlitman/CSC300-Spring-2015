@@ -2,6 +2,7 @@
 public class Node 
 {
 	private Node nextNode;
+	private Node prevNode;
 	private int payload;
 	
 	public Node(int payload)

@@ -15,16 +15,19 @@ public class LinkedList
 	public LinkedList()
 	{
 		this.head = null;
+		this.tail = null;
 		this.count = 0;
 	}
 	
 	public void displayInReverse()
 	{
-		for(int i = this.count-1; i >= 0; i--)
+		Node currNode = tail;
+		while(currNode.getPrevNode() != null)
 		{
-			System.out.print(this.get(i) + "->");
+			System.out.print(currNode.getPayload() + "->");
+			currNode = currNode.getPrevNode();
 		}
-		System.out.println(" null");
+		System.out.println(currNode.getPayload() + "-> null");
 	}
 	
 	public int get(int index)
@@ -71,12 +74,6 @@ public class LinkedList
 	
 	public void addAtIndex(int payload, int index)
 	{
-		//hw goes here
-		//add a Node containing the payload such that this node will 
-		//be added to the list and live at position index.
-		//For now: any index less than zero should add at the front of
-		//the list, and any index greater than or equal to count should
-		//add at the end of the list
 		if(index <= 0)
 		{
 			this.addFront(payload);
@@ -89,12 +86,14 @@ public class LinkedList
 		{
 			Node n = new Node(payload);
 			Node curr = head;
-			for(int i = 0; i < index-1; i++)
+			for(int i = 0; i < index; i++)
 			{
 				curr = curr.getNextNode();
 			}
-			n.setNextNode(curr.getNextNode());
-			curr.setNextNode(n);
+			n.setNextNode(curr);
+			n.setPrevNode(curr.getPrevNode());
+			curr.setPrevNode(n);
+			n.getPrevNode().setNextNode(n);
 			this.count++;
 		}
 		
@@ -106,10 +105,12 @@ public class LinkedList
 		if(head == null)
 		{
 			head = n;
+			tail = n;
 		}
 		else
 		{
 			n.setNextNode(head);
+			head.setPrevNode(n);
 			head = n;
 		}
 		this.count++;
@@ -121,17 +122,13 @@ public class LinkedList
 		if(this.head == null)
 		{
 			this.head = n;
+			this.tail = n;
 		}
 		else
 		{
-			//find the last node in the list
-			Node currNode = this.head;
-			while(currNode.getNextNode() != null)
-			{
-				currNode = currNode.getNextNode();
-			}
-			//currNode will point to the very last Node in the list
-			currNode.setNextNode(n);
+			tail.setNextNode(n);
+			n.setPrevNode(tail);
+			tail = n;
 		}
 		this.count++;
 	}
@@ -160,15 +157,16 @@ public class LinkedList
 			else
 			{
 				Node currNode = head;
-				for(int i = 1; i < index; i++)
+				for(int i = 0; i < index; i++)
 				{
 					currNode = currNode.getNextNode();
 				}
-				int payloadToReturn = currNode.getNextNode().getPayload();
-				Node temp = currNode.getNextNode().getNextNode();
-				currNode.getNextNode().setNextNode(null);
-				currNode.setNextNode(temp);
-				return payloadToReturn;
+				currNode.getPrevNode().setNextNode(currNode.getNextNode());
+				currNode.getNextNode().setPrevNode(currNode.getPrevNode());
+				currNode.setNextNode(null);
+				currNode.setPrevNode(null);
+				this.count--;
+				return currNode.getPayload();
 			}
 		}
 	}
@@ -185,27 +183,37 @@ public class LinkedList
 		}
 		else
 		{
-			Node currNode = head;
-			for(int i = 1; i < this.count-1; i++)
-			{
-				currNode = currNode.getNextNode();
-			}
-			int payloadToReturn = currNode.getNextNode().getPayload();
-			currNode.setNextNode(null);
+			Node curr = tail;
+			tail = curr.getPrevNode();
+			curr.setPrevNode(null);
+			tail.setNextNode(null);
 			this.count--;
-			return payloadToReturn;
+			return curr.getPayload();
 		}
 	}
+	
 	public int removeFront() throws Exception
 	{
 		if(head == null)
 		{
 			throw new Exception("Can Not Remove Front: Empty List");
 		}
-		Node currNode = head;
-		head = head.getNextNode();
-		currNode.setNextNode(null);
-		this.count--;
-		return currNode.getPayload();
+		else if(this.count == 1)
+		{
+			int payloadToReturn = this.head.getPayload();
+			this.head = null;
+			this.tail = null;
+			this.count = 0;
+			return payloadToReturn;
+		}
+		else
+		{
+			Node curr = head;
+			curr.getNextNode().setPrevNode(null);
+			head = curr.getNextNode();
+			curr.setNextNode(null);
+			this.count--;
+			return curr.getPayload();
+		}
 	}
 }

@@ -16,5 +16,8 @@ public class Driver
 		ll.addFront(7);
 		ll.display();
 		ll.displayInReverse();
+		ll.addAtIndex(13, 2);
+		ll.display();
+		ll.displayInReverse();
 	}
 }
